@@ -5,90 +5,27 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    
-    <!--<script type = "text/javascript">
-        function loadImage(file, x) {
-            console.log(x);
-            // get the canvas element using the DOM
-            var canvas = document.getElementById('mycanvas');
-            
-            // Make sure we don't execute when canvas isn't supported
-            if (canvas.getContext) {
-            
-                // use getContext to use the canvas for drawing
-                var ctx = canvas.getContext('2d');
-               
-                // Draw shapes
-                var img = new Image();
-                // img.src = './images/seeds.png';
-                img.src = './images/' + file;
-                img.onload = function() {
-                    ctx.drawImage(img, x ,0);
-                }
-            } else {
-               alert('You need Safari or Firefox 1.5+ to see this demo.');
-            }
-        } 
-
-        function drawShape() {
-            let cropImages = [];
-            const fs = require('fs-extra');
-
-            // prints out all files
-            let x = 0;
-            fs.readdir(__dirname + '/images/', function (err, files) {
-                if (err) {
-                    return console.log("Unable to scan directory: " + err);
-                }
-                
-                files.forEach(function(file) {
-                    x += 50;
-                    cropImages.push(file);
-                    loadImage(file, x);
-                    // console.log('file: ', file);
-                })
-            });
-         }
-    </script> -->
+    <script src="https://unpkg.com/konva@3.2.4/konva.min.js"></script>
 </head>
 <body>
     <!-- <canvas id = "mycanvas"></canvas> -->
     <div class="container currContainer">
         <h1>File Manager</h1>
+        
         <button class="btn" id="goUP" type="button">Back</button>
         <button class="btn" id="goDOWN" type="button">Forward</button>
         <p>Current directory: <span id = "currPath"></span></p>
-        <div class="row text-center" style="display: flex; flex-wrap: wrap;">
+        <div id="container"></div>
+        <!-- <div class="row text-center" style="display: flex; flex-wrap: wrap;">
             <div class="col-md-3 col-sm-6">
-                <ul id = "currUL">
-                        <!--<p id = "files"></p> -->
-                        
+                <div class="thumbnail" id="currUL">
         
-                </ul>
+                </div>
 
             </div>
-        </div>
+        </div> -->
     </div>
-     
-    <!-- <div class = "rootContainer">
-        <p>Root directory: </p>
-
-        <div id = "output">
-            <ul id = "rootUL">
-
-            </ul>
-        </div>
-    </div> -->
-    <!-- <div class = "currContainer">
-        <p>Current directory: <span id = "currPath"></span></p>
-
-        <div id = "output">
-            <ul id = "currUL">
-                // <p id = "files"></p> //
-
-            </ul>
-        </div>
-    </div>
-    <script src = "./view.js"></script> -->
+    <script src='./view.js'>
+    </script>
 </body>
 </html>

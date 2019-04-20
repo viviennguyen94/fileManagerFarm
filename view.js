@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 let newPath = __dirname;
+// const konva = require('konva');
 
 // ipc render part
 const electron = require('electron');
@@ -11,10 +12,10 @@ const {ipcRenderer} = electron;
 // function printRoot() {
 //     // var str = '';
 //     rootDir.forEach(function(file) {
-//         // str+= '<li>' + file + '</li>';
-//         var li = document.createElement("li");
-//         li.textContent = file;
-//         document.getElementById("rootUL").appendChild(li);
+//         // str+= '<p>' + file + '</p>';
+//         var p = document.createElement("p");
+//         p.textContent = file;
+//         document.getElementById("rootUL").appendChild(p);
 //     })
 //     // document.getElementById("files").innerHTML = str;
 // }
@@ -37,21 +38,21 @@ function printContents() {
         document.getElementById("currPath").innerHTML = process.cwd();
         
         files.forEach(function(file) {
-            var li = document.createElement('li');
-            li.textContent = file;
+            var p = document.createElement('p');
+            p.textContent = file;
 
             // if it is a directory (specify with **)
             if (fs.statSync(file).isDirectory()) {
-                // li.textContent += "**";
-                li.classList.add('currFolder')
-                document.getElementById("currUL").appendChild(li);
-                li.style.color = "red";
+                // p.textContent += "**";
+                p.classList.add('currFolder')
+                document.getElementById("currUL").appendChild(p);
+                p.style.color = "red";
                 // console.log("folder", file);
             }
             else {
                 // if file
-                li.classList.add('currFile')
-                document.getElementById("currUL").appendChild(li);
+                p.classList.add('currFile')
+                document.getElementById("currUL").appendChild(p);
                 // console.log("file: ", file);
             }
         })
@@ -142,9 +143,9 @@ function goIntoDirectory() {
 }
 function createFileFolder() {
     ipcRenderer.on('file:add', function(e, file) {
-        const li = document.createElement('li');
+        const p = document.createElement('p');
         const itemText = document.createTextNode(file);
-        li.appendChild(itemText);
+        p.appendChild(itemText);
 
         // // create actual file if it does not exist
         // fs.appendFile()
@@ -170,8 +171,8 @@ function createFileFolder() {
                 }, function() {
                     fs.mkdirSync(file);
                     // if folder successfully created output
-                    document.getElementById('currUL').appendChild(li);
-                    li.style.color = "red";
+                    document.getElementById('currUL').appendChild(p);
+                    p.style.color = "red";
                     resolve();
                 })
             })
