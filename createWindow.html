@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Create folder</title>
+</head>
+<body>
+    <form>
+        <div>
+            <label>Enter folder name</label>
+            <input type="text" id="fileCreate" autofocus>
+        </div>
+        <button type="submit">Create</button>
+    </form>
+    <script>
+        const electron = require('electron');
+        const {ipcRenderer} = electron;
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', submitForm);
+
+        function submitForm(e) {
+            e.preventDefault();
+            const file = document.querySelector("#fileCreate").value;
+            ipcRenderer.send('file:add', file)
+        }
+    </script>
+</body>
+</html>

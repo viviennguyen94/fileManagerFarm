@@ -1,0 +1,15 @@
+{
+  "name": "project2",
+  "version": "1.0.0",
+  "description": "file manager for advanced js class",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "vivien nguyen",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^4.0.5",
+    "nodemon": "^1.18.11"
+  }
+}
