@@ -28,46 +28,15 @@ createFileFolder();
 
 function printContents() {
 
-    // function makeGroups(i, j, group, file, crop) {
-    //     // let box = new Konva.Rect({
-    //     //     x: i,
-    //     //     y: j,
-    //     //     width: 50,
-    //     //     height: 50,
-    //     //     name: 'red',
-    //     //     fill: 'red',
-    //     //     stroke: 'black',
-    //     //     strokeWidth: 4
-    //     // });        
-    // }
-
     // prints out all files
-    let files1 = [];
-    let folders = [];
     fs.readdir(newPath, function (err, files) {
         if (err) {
             return console.log("Unable to scan directory: " + err);
         }
 
-        // // print current directory
-        // document.getElementById("currPath").innerHTML = process.cwd();
+        // print current directory
+        document.getElementById("currPath").innerHTML = process.cwd();
         
-        console.log('1.')
-        files.forEach(function(file) {
-            
-            // if it is a directory (specify with **)
-            if (fs.statSync(file).isDirectory()) {
-                addFolders(folders, file);
-            }
-            else {
-                addFiles(files1, file);
-            }
-        })
-
-
-        console.log(files1);
-        console.log(folders);
-        // start loading image
         let width = window.innerWidth;
         let height = window.innerHeight;
 
@@ -79,75 +48,108 @@ function printContents() {
 
         let layer = new Konva.Layer();
 
-        let imageObj = new Image();
-        imageObj.onload = function(group) {
-            console.log('meow');
-            let i = 25;
-            let j = 0;
+        let i = 25;
+        let j = 0;
 
-            for (let a = 0; a < files1.length; a++) {
-                if (i > 250) {
-                    i = 25;
-                    j += 55;
+        // array of random crops! 
+        let cropVariety = ['cauliflower.png', 'cropBlueberry.png', 'cropCorn.png', 'cropMelon.png', 'cropPumpkin.png', 'cropStrawberry.png'];
+
+        files.forEach(function(file) {
+
+            // if it is a directory (specify with **)
+            if (fs.statSync(file).isDirectory()) {
+                // start loading image
+                let imageObj = new Image();
+                imageObj.onload = function() {
+                    if (i > 250) {
+                        i = 25;
+                        j += 55;
+                    }
+                
+                    let group = new Konva.Group({
+                        id: file,
+                        name: 'folder',
+                        x: i,
+                        y: j,
+                    });
+                    // makeGroups(i, j, group, file, crop);
+                    let text = new Konva.Text({
+                        x: i,
+                        y: j + 65,
+                        text: file,
+                        fontSize: 14,
+                        width: 80,
+                        fontFamily: 'Calibri',
+                    });
+                    group.add(text);
+                    // addFolders(folders, file);
+                    let crop = new Konva.Image({
+                        x: i,
+                        y: j,
+                        image: imageObj,
+                        width: 60,
+                        height: 65
+                    });
+                    group.add(crop);
+                    layer.add(group);
+                    // layer.add(crop);
+                    i +=45;
+
+                    stage.add(layer);
+
+                        console.log('i: ', i);
+                        console.log('j: ', j);
+
                 }
-
-                let group = new Konva.Group({
-                    id: 'cropGroup',
-                    x: i,
-                    y: j,
-                });
-                // makeGroups(i, j, group, file, crop);
-                let text = new Konva.Text({
-                    x: i,
-                    y: j + 65,
-                    text: files1[a],
-                    fontSize: 14,
-                    width: 80,
-                    fontFamily: 'Calibri',
-                });
-                
-                
-                group.add(text);
-                
-                let crop = new Konva.Image({
-                    x: i,
-                    y: j,
-                    image: imageObj,
-                    width: 60,
-                    height: 60
-                });
-                
-                group.add(crop);
-                
-                layer.add(group);
-                // layer.add(crop);
-                i +=45;
-
-                stage.add(layer);
-
+                imageObj.src = './images/' + cropVariety[Math.floor(Math.random() * 6)];
             }
+            else {
+                // start loading image
+                let imageObj = new Image();
+                imageObj.onload = function() {
+                    if (i > 250) {
+                        i = 25;
+                        j += 55;
+                    }
+                
+                    let group = new Konva.Group({
+                        id: file,
+                        name: 'folder',
+                        x: i,
+                        y: j,
+                    });
+                    // makeGroups(i, j, group, file, crop);
+                    let text = new Konva.Text({
+                        x: i,
+                        y: j + 65,
+                        text: file,
+                        fontSize: 14,
+                        width: 80,
+                        fontFamily: 'Calibri',
+                    });
+                    group.add(text);
+                    // addFolders(folders, file);
+                    let crop = new Konva.Image({
+                        x: i,
+                        y: j,
+                        image: imageObj,
+                        width: 60,
+                        height: 65
+                    });
+                    group.add(crop);
+                    layer.add(group);
+                    // layer.add(crop);
+                    i +=45;
 
-            console.log('i: ', i);
-            console.log('j: ', j);
+                    stage.add(layer);
 
-        }
-        imageObj.src = './images/cropMelon.png';
+                }
+                imageObj.src = './images/hoe.png';
+                // addFiles(files1, file);
+            }
+        })
 
     });
-    function addFolders(folders, file) {
-        folders.push(file);
-    }
-    function addFiles(files1, file) {
-        files1.push(file)
-    }
-}
-
-function deleteContents () {
-    let root = document.getElementById("currUL");
-    // delete all files from dom list
-    while (root.firstChild) {
-        root.removeChild(root.firstChild);
-    }
 }
 
 function deleteFileFolder() {
@@ -190,6 +192,7 @@ function deleteFileFolder() {
 
 function goBackDirectory() {
     // go up a directory
+    console.log('back');
     let button = document.querySelector("#goUP");
     button.addEventListener('click', function (event) {
         // go up a directory
@@ -197,7 +200,6 @@ function goBackDirectory() {
         console.log(process.cwd());
         newPath = process.cwd();
 
-        deleteContents();
         printContents();
         // printContents(path.join(__dirname))
     })
@@ -207,17 +209,16 @@ function goIntoDirectory() {
     // go into a directory
     document.addEventListener('click', function (event) {
         // if double clicked on delete file and delete child
-        if (event.target.classList.contains('currFolder')) {
+        if (event.target) {
             // stores selected target to remove
             let folderIn = "./";
-            folderIn += event.target.innerHTML;
+            folderIn += event.target.id();
             console.log(folderIn);
             
             // change to new directory
             process.chdir(folderIn);
             newPath = process.cwd();
 
-            deleteContents();
             printContents();
             
         }
