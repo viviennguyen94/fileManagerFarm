@@ -20,33 +20,33 @@ const {ipcRenderer} = electron;
 //     // document.getElementById("files").innerHTML = str;
 // }
 // printRoot();
-printContents();
-deleteFileFolder();
-goBackDirectory();
-goIntoDirectory();
-createFileFolder();
 
-function printContents() {
+var app = new PIXI.Application(800, 600, {backgroundColor : 0xffffff});
+printContents(app);
+goBackDirectory(app);
+deleteFileFolder(app);
+goIntoDirectory(app);
+createFileFolder(app);
+
+
+function printContents(app) {
+
+
+    goBackDirectory(app);
+    
+    document.getElementById('currContainer').appendChild(app.view);
+
+    // print current directory
+    document.getElementById("currPath").innerHTML = process.cwd();
 
     // prints out all files
     fs.readdir(newPath, function (err, files) {
+
+        var container;
+        
         if (err) {
             return console.log("Unable to scan directory: " + err);
         }
-
-        // print current directory
-        document.getElementById("currPath").innerHTML = process.cwd();
-        
-        let width = window.innerWidth;
-        let height = window.innerHeight;
-
-        let stage = new Konva.Stage({
-            container: 'container',
-            width: width,
-            height: height
-        });
-
-        let layer = new Konva.Layer();
 
         let i = 25;
         let j = 0;
@@ -56,103 +56,73 @@ function printContents() {
 
         files.forEach(function(file) {
 
+            if (i > 250) {
+                i = 25;
+                j += 70;
+            }
+
             // if it is a directory (specify with **)
             if (fs.statSync(file).isDirectory()) {
                 // start loading image
-                let imageObj = new Image();
-                imageObj.onload = function() {
-                    if (i > 250) {
-                        i = 25;
-                        j += 55;
-                    }
-                
-                    let group = new Konva.Group({
-                        id: file,
-                        name: 'folder',
-                        x: i,
-                        y: j,
-                    });
-                    // makeGroups(i, j, group, file, crop);
-                    let text = new Konva.Text({
-                        x: i,
-                        y: j + 65,
-                        text: file,
-                        fontSize: 14,
-                        width: 80,
-                        fontFamily: 'Calibri',
-                    });
-                    group.add(text);
-                    // addFolders(folders, file);
-                    let crop = new Konva.Image({
-                        x: i,
-                        y: j,
-                        image: imageObj,
-                        width: 60,
-                        height: 65
-                    });
-                    group.add(crop);
-                    layer.add(group);
-                    // layer.add(crop);
-                    i +=45;
 
-                    stage.add(layer);
-
-                        console.log('i: ', i);
-                        console.log('j: ', j);
-
-                }
-                imageObj.src = './images/' + cropVariety[Math.floor(Math.random() * 6)];
+                let isFolder = true;
+                i = makeGroups(i, j, app, container, cropVariety, isFolder, file);
             }
             else {
-                // start loading image
-                let imageObj = new Image();
-                imageObj.onload = function() {
-                    if (i > 250) {
-                        i = 25;
-                        j += 55;
-                    }
-                
-                    let group = new Konva.Group({
-                        id: file,
-                        name: 'folder',
-                        x: i,
-                        y: j,
-                    });
-                    // makeGroups(i, j, group, file, crop);
-                    let text = new Konva.Text({
-                        x: i,
-                        y: j + 65,
-                        text: file,
-                        fontSize: 14,
-                        width: 80,
-                        fontFamily: 'Calibri',
-                    });
-                    group.add(text);
-                    // addFolders(folders, file);
-                    let crop = new Konva.Image({
-                        x: i,
-                        y: j,
-                        image: imageObj,
-                        width: 60,
-                        height: 65
-                    });
-                    group.add(crop);
-                    layer.add(group);
-                    // layer.add(crop);
-                    i +=45;
-
-                    stage.add(layer);
-
-                }
-                imageObj.src = './images/hoe.png';
-                // addFiles(files1, file);
+                let isFolder = false;
+                i = makeGroups(i, j, app, container, cropVariety, isFolder, file);
             }
+
+            i +=45;
         })
+        
+
+        function makeGroups(i, j, app, container, cropVariety, isFolder, file) {
+
+            container = new PIXI.Container();
+
+            app.stage.addChild(container);
+
+            var texture;
+
+            if (isFolder) {
+                texture = PIXI.Texture.fromImage('./images/hoe.png');
+            } else {
+                texture = PIXI.Texture.fromImage('./images/' + cropVariety[Math.floor(Math.random() * 6)]);
+            }
+
+            // adding image to container
+            var fileImg = new PIXI.Sprite(texture);
+            fileImg.x = i;
+            fileImg.y = j;
+            fileImg.width = 55;
+            fileImg.height = 75;
+
+            container.addChild(fileImg);
+
+            // adding text to container
+            var style = new PIXI.TextStyle({
+                fontSize: 14,
+                fontStyle: 'italic',
+                wordWrap: true,
+                breakWords: true,
+                wordWrapWidth: 70,
+            })
+            var fileName = new PIXI.Text(file, style);
+            fileName.x = i;
+            fileName.y = j + 75;
+            container.addChild(fileName);
+
+            container.x = i;
+            container.y = j;
+
+            return i;
+        }
 
     });
 }
 
-function deleteFileFolder() {
+function deleteFileFolder(app) {
     // delete file/folder
     document.addEventListener('dblclick', function (event) {
 
@@ -190,42 +160,51 @@ function deleteFileFolder() {
     })
 }
 
-function goBackDirectory() {
+function goBackDirectory(app) {
+
+    
     // go up a directory
     console.log('back');
     let button = document.querySelector("#goUP");
     button.addEventListener('click', function (event) {
+        
+        let b = app.stage.children.length - 1;
+        while(b >= 0) {
+            app.stage.removeChild(app.stage.children[b]);
+            b--;
+        }
+
         // go up a directory
         process.chdir("../")
         console.log(process.cwd());
         newPath = process.cwd();
 
-        printContents();
+        printContents(app);
         // printContents(path.join(__dirname))
     })
 }
 
-function goIntoDirectory() {
-    // go into a directory
-    document.addEventListener('click', function (event) {
-        // if double clicked on delete file and delete child
-        if (event.target) {
-            // stores selected target to remove
-            let folderIn = "./";
-            folderIn += event.target.id();
-            console.log(folderIn);
+function goIntoDirectory(app) {
+    // // go into a directory
+    // document.addEventListener('click', function (event) {
+    //     // if double clicked on delete file and delete child
+    //     if (event.target) {
+    //         // stores selected target to remove
+    //         let folderIn = "./";
+    //         folderIn += event.target.id();
+    //         console.log(folderIn);
             
-            // change to new directory
-            process.chdir(folderIn);
-            newPath = process.cwd();
+    //         // change to new directory
+    //         process.chdir(folderIn);
+    //         newPath = process.cwd();
 
-            printContents();
+    //         printContents();
             
-        }
-        // if file do nothing
-    })
+    //     }
+    //     // if file do nothing
+    // })
 }
-function createFileFolder() {
+function createFileFolder(app) {
     ipcRenderer.on('file:add', function(e, file) {
         const p = document.createElement('p');
         const itemText = document.createTextNode(file);
