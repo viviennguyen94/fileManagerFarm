@@ -16,6 +16,7 @@
         <button class="btn" id="goDOWN" type="button">Forward</button>
         <p>Current directory: <span id = "currPath"></span></p>
         <div id="container"></div>
+        <div id="pictureTest"></div>
         <!-- <div class="row text-center" style="display: flex; flex-wrap: wrap;">
             <div class="col-md-3 col-sm-6">
                 <div class="thumbnail" id="currUL">
@@ -27,5 +28,40 @@
     </div>
     <script src='./view.js'>
     </script>
+    <!-- <script>
+        var width = window.innerWidth;
+      var height = window.innerHeight;
+
+      var stage = new Konva.Stage({
+        container: 'pictureTest',
+        width: width,
+        height: height
+      });
+
+      var layer = new Konva.Layer();
+      var imageObj = new Image();
+      imageObj.onload = function() {
+        var yoda = new Konva.Image({
+          x: 50,
+          y: 50,
+          image: imageObj,
+          width: 106,
+          height: 118
+        });
+
+        var group = new Konva.Group({
+                    id: 'cropGroup',
+                    x: i,
+                    y: j,
+                });
+
+        // add the shape to the layer
+        layer.add(yoda);
+
+        // add the layer to the stage
+        stage.add(layer);
+      };
+      imageObj.src = './images/cropMelon.png';
+    </script> -->
 </body>
 </html>

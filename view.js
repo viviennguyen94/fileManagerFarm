@@ -10,10 +10,10 @@ const {ipcRenderer} = electron;
 // const rootDir = fs.readdirSync("C:\\")
 
 // function printRoot() {
-//     // var str = '';
+//     // let str = '';
 //     rootDir.forEach(function(file) {
 //         // str+= '<p>' + file + '</p>';
-//         var p = document.createElement("p");
+//         let p = document.createElement("p");
 //         p.textContent = file;
 //         document.getElementById("rootUL").appendChild(p);
 //     })
@@ -28,35 +28,154 @@ createFileFolder();
 
 function printContents() {
 
+    // let width = window.innerWidth;
+    //   let height = window.innerHeight;
+
+    //   let stage = new Konva.Stage({
+    //     container: 'container',
+    //     width: width,
+    //     height: height
+    //   });
+
+    //   let layer = new Konva.Layer();
+
+    //   let rect = new Konva.Rect({
+    //     x: 50,
+    //     y: 50,
+    //     width: 100,
+    //     height: 50,
+    //     fill: 'green',
+    //     stroke: 'black',
+    //     strokeWidth: 4
+    //   });
+
+    //   // add the shape to the layer
+    //   layer.add(rect);
+
+    //   // add the layer to the stage
+    //   stage.add(layer);
+
+    function makeGroups(i, j, group, file, crop) {
+        // let box = new Konva.Rect({
+        //     x: i,
+        //     y: j,
+        //     width: 50,
+        //     height: 50,
+        //     name: 'red',
+        //     fill: 'red',
+        //     stroke: 'black',
+        //     strokeWidth: 4
+        // });
+        
+
+        let text = new Konva.Text({
+            x: i,
+            y: j + 50,
+            text: file,
+            fontSize: 14,
+            width: 50,
+            fontFamily: 'Calibri',
+        });
+
+        group.add(text);
+        group.add(crop);
+
+        
+        
+    }
+
     // prints out all files
     fs.readdir(newPath, function (err, files) {
         if (err) {
             return console.log("Unable to scan directory: " + err);
         }
 
-        // print current directory
-        document.getElementById("currPath").innerHTML = process.cwd();
-        
-        files.forEach(function(file) {
-            var p = document.createElement('p');
-            p.textContent = file;
 
-            // if it is a directory (specify with **)
-            if (fs.statSync(file).isDirectory()) {
-                // p.textContent += "**";
-                p.classList.add('currFolder')
-                document.getElementById("currUL").appendChild(p);
-                p.style.color = "red";
-                // console.log("folder", file);
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        let stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height
+        });
+
+        let layer = new Konva.Layer();
+
+        function loadImage() {
+
+            let imageObj = new Image();
+            imageObj.onload = function(group) {
+                let i = 15;
+                let j = 0;
+                let crop = new Konva.Image({
+                    x: i,
+                    y: j,
+                    image: imageObj,
+                    width: 50,
+                    height: 50
+                });
+
+                // // print current directory
+                // document.getElementById("currPath").innerHTML = process.cwd();
+                
+                
+                files.forEach(function(file) {
+                    // let p = document.createElement('p');
+                    // p.textContent = file;
+                    if (i > 250) {
+                        i = 15;
+                        j += 100;
+                    }
+
+                    let group = new Konva.Group({
+                        id: 'cropGroup',
+                        x: i,
+                        y: j,
+                    });
+                    // makeGroups(i, j, group, file, crop);
+
+                    
+                    let text = new Konva.Text({
+                        x: i,
+                        y: j + 50,
+                        text: file,
+                        fontSize: 14,
+                        width: 50,
+                        fontFamily: 'Calibri',
+                    });
+                    
+                    
+                    group.add(text);
+                    group.add(crop);
+                    
+                    
+                    
+                    // // if it is a directory (specify with **)
+                    // if (fs.statSync(file).isDirectory()) {
+        
+                    // }
+                    // else {
+
+                    // }
+                    layer.add(group);
+                    i +=55;
+
+                    
+                })
+                
+                stage.add(layer);
+
             }
-            else {
-                // if file
-                p.classList.add('currFile')
-                document.getElementById("currUL").appendChild(p);
-                // console.log("file: ", file);
-            }
-        })
+            
+            imageObj.src = './images/cropMelon.png';
+
+        }
+        loadImage();
+        
+        
     });
+
 }
 
 function deleteContents () {
