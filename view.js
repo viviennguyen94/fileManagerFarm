@@ -82,13 +82,13 @@ function printContents() {
         let imageObj = new Image();
         imageObj.onload = function(group) {
             console.log('meow');
-            let i = 15;
+            let i = 25;
             let j = 0;
 
             for (let a = 0; a < files1.length; a++) {
                 if (i > 250) {
-                i = 15;
-                j += 100;
+                    i = 25;
+                    j += 55;
                 }
 
                 let group = new Konva.Group({
@@ -99,10 +99,10 @@ function printContents() {
                 // makeGroups(i, j, group, file, crop);
                 let text = new Konva.Text({
                     x: i,
-                    y: j + 50,
+                    y: j + 65,
                     text: files1[a],
                     fontSize: 14,
-                    width: 50,
+                    width: 80,
                     fontFamily: 'Calibri',
                 });
                 
@@ -113,19 +113,22 @@ function printContents() {
                     x: i,
                     y: j,
                     image: imageObj,
-                    width: 50,
-                    height: 50
+                    width: 60,
+                    height: 60
                 });
                 
                 group.add(crop);
                 
                 layer.add(group);
                 // layer.add(crop);
-                i +=55;
+                i +=45;
 
                 stage.add(layer);
 
             }
+
+            console.log('i: ', i);
+            console.log('j: ', j);
 
         }
         imageObj.src = './images/cropMelon.png';
