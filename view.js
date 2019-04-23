@@ -20,191 +20,309 @@ const {ipcRenderer} = electron;
 //     // document.getElementById("files").innerHTML = str;
 // }
 // printRoot();
+printContents();
+goBackDirectory();
+goIntoDirectory();
+createFileFolder();
 
-var app = new PIXI.Application(800, 600, {backgroundColor : 0xffffff});
-printContents(app);
-goBackDirectory(app);
-deleteFileFolder(app);
-goIntoDirectory(app);
-createFileFolder(app);
-
-
-function printContents(app) {
-
-
-    goBackDirectory(app);
-    
-    document.getElementById('currContainer').appendChild(app.view);
-
-    // print current directory
-    document.getElementById("currPath").innerHTML = process.cwd();
-
-    // prints out all files
-    fs.readdir(newPath, function (err, files) {
-
-        var container;
-        
-        if (err) {
-            return console.log("Unable to scan directory: " + err);
-        }
-
-        let i = 25;
-        let j = 0;
-
-        // array of random crops! 
-        let cropVariety = ['cauliflower.png', 'cropBlueberry.png', 'cropCorn.png', 'cropMelon.png', 'cropPumpkin.png', 'cropStrawberry.png'];
-
-        files.forEach(function(file) {
-
-            if (i > 250) {
-                i = 25;
-                j += 70;
+function loadImages(sources, callback) {
+    var images = {};
+    var loadedImages = 0;
+    var numImages = 0;
+    // get num of sources
+    for (var src in sources) {
+        numImages++;
+    }
+    for (var src in sources) {
+        images[src] = new Image();
+        images[src].onload = function() {
+            if (++loadedImages >= numImages) {
+                callback(images);
             }
-
-            // if it is a directory (specify with **)
-            if (fs.statSync(file).isDirectory()) {
-                // start loading image
-
-                let isFolder = true;
-                i = makeGroups(i, j, app, container, cropVariety, isFolder, file);
-            }
-            else {
-                let isFolder = false;
-                i = makeGroups(i, j, app, container, cropVariety, isFolder, file);
-            }
-
-            i +=45;
-        })
-        
-
-        function makeGroups(i, j, app, container, cropVariety, isFolder, file) {
-
-            container = new PIXI.Container();
-
-            app.stage.addChild(container);
-
-            var texture;
-
-            if (isFolder) {
-                texture = PIXI.Texture.fromImage('./images/hoe.png');
-            } else {
-                texture = PIXI.Texture.fromImage('./images/' + cropVariety[Math.floor(Math.random() * 6)]);
-            }
-
-            // adding image to container
-            var fileImg = new PIXI.Sprite(texture);
-            fileImg.x = i;
-            fileImg.y = j;
-            fileImg.width = 55;
-            fileImg.height = 75;
-
-            container.addChild(fileImg);
-
-            // adding text to container
-            var style = new PIXI.TextStyle({
-                fontSize: 14,
-                fontStyle: 'italic',
-                wordWrap: true,
-                breakWords: true,
-                wordWrapWidth: 70,
-            })
-            var fileName = new PIXI.Text(file, style);
-            fileName.x = i;
-            fileName.y = j + 75;
-            container.addChild(fileName);
-
-            container.x = i;
-            container.y = j;
-
-            return i;
-        }
-
-    });
+        };
+        images[src].src = sources[src];
+    }
 }
 
-function deleteFileFolder(app) {
-    // delete file/folder
-    document.addEventListener('dblclick', function (event) {
+function printContents() {
 
-        // stores selected target to remove
-        let fileDelete = "./";
-        fileDelete += event.target.innerHTML;
-        console.log(fileDelete);
+    function start(images) {
+        // // print current directory
+        // document.getElementById("currPath").innerHTML = process.cwd();
+            
+        // let width = window.innerWidth;
+        // let height = window.innerHeight;
+        let width = 2000;
+        let height = 1000;
 
-        // if double clicked on delete file and delete child
-        if (event.target.classList.contains('currFile')) {
-            // remove clicked text from UI
-            document.getElementById("currUL").removeChild(event.target);
-            // it is a file
-            // remove actual file
-            fs.unlink(fileDelete, (err) => {
-                if (err) {
-                    console.error(err)
-                    return
-                }
-                // file was removed
-            })     
+        let stage = new Konva.Stage({
+
+            container: 'container',
+            width: width,
+            height: height,
+        });
+
+        let layer = new Konva.Layer();
+
+        // set background
+        let grassBackground = new Konva.Rect({
+            x:0,
+            y:0,
+            width: width, 
+            height: height,
+            fillPatternImage: images.grass1,
+        })
+
+        layer.add(grassBackground);
+    
+
+        // set farm
+        for (let i = 200; i < 1300; i = i + 50) {
+            for (let j = 100; j < 800; j = j + 50) {
+                let farm = new Konva.Rect({
+                    x: i,
+                    y: j,
+                    width: 50,
+                    height: 50,
+                    fillPatternScaleX: 100,
+                    fillPatternScaleY: 100,
+                    fillPatternImage: images.dirt
+                })
+                layer.add(farm);
+            }
         }
-        else if (event.target.classList.contains('currFolder')) {
-            // remove clicked text from UI
-            document.getElementById("currUL").removeChild(event.target);
 
-            // if directory use remove to delete directory
-            fs.remove(fileDelete, (err) => {
-                if (err) {
-                    console.log("could not delete directory: " + err) 
-                    return
+        // trash can
+        console.log('trash');
+        let trash = new Konva.Image({
+            x: 1400,
+            y: 150,
+            name: 'trash',
+            image: images.trash,
+            width: 60,
+            height: 65
+        });
+
+        trash.on('click', function(evt) {
+            evt.cancelBubble = true;
+            console.log('trash clicked');
+            console.log('trash: ', evt.target.name())
+        })
+        layer.add(trash);
+        stage.add(layer);
+
+        stage.add(layer);
+
+        // prints out all files
+        fs.readdir(newPath, function (err, files) {
+            if (err) {
+                return console.log("Unable to scan directory: " + err);
+            }
+
+            let i = 115;
+            let j = 55;
+
+            // array of random crops! 
+            // let cropVariety = ['cauliflower.png', 'cropBlueberry.png', 'cropCorn.png', 'cropMelon.png', 'cropPumpkin.png', 'cropStrawberry.png'];
+            let cropVariety = [images.cauliflower, images.cropBlueberry, images.cropCorn, images.cropMelon, images.cropPumpkin, images.cropStrawberry]
+
+            var group, text;
+            files.forEach(function(file) {
+                if (i > 650) {
+                    i = 115;
+                    j += 55;
                 }
-            })  
-        }
+
+                // if it is a directory (specify with **)
+                if (fs.statSync(file).isDirectory()) {
+                    let isFile = true;
+                    makeGroup(i, j, isFile, cropVariety, stage, layer, group, file);
+                }
+                else {
+                    let isFile = false;
+                    makeGroup(i, j, isFile, cropVariety, stage, layer, group, file);
+                    
+                }
+                i +=45;
+            })
+        
+            function makeGroup(i, j, isFile, cropVariety, stage, layer, group, file) {
+                // start loading image                                    
+                group = new Konva.Group({
+                    x: i,
+                    y: j,
+                    name: 'blah',
+                    draggable: true,
+                });
+
+                text = new Konva.Text({
+                    x: i,
+                    y: j + 65,
+                    text: file,
+                    // name: file,
+                    fontSize: 16,
+                    width: 80,
+                    fontFamily: 'Calibri',
+                    fontStyle: 'bold',
+                    fill: 'white',
+                });
+                group.add(text);
+
+                var crop;
+                if (isFile) {
+                    crop = new Konva.Image({
+                        x: i,
+                        y: j,
+                        name: 'fileFarm ' + file,
+                        image: images.hoe,
+                        width: 60,
+                        height: 65,
+                        opacity: 1,
+                    });
+                } else {
+
+                    crop = new Konva.Image({
+                        x: i, 
+                        y: j,
+                        name: 'folderFarm ' + file,
+                        image: cropVariety[Math.floor(Math.random() * 6)],
+                        width: 60,
+                        height: 65
+                    })
+                }
+                
+                group.add(crop);
+                layer.add(group);
+                
+                deleteFileFolder(group, crop, layer);
+                goIntoDirectory(group, stage);
+
+                stage.add(layer);
+            }
+            
+        });
+    }
+
+    var sources = {
+        farm: './images/background/farm.png',
+        dirt: './images/background/dirt.png',
+        grass1: './images/background/grass1.png',
+        grass2: './images/background/grass2.png',
+        treeGrass:'./images/background/treegrassfield.png',
+        cauliflower: './images/cauliflower.png',
+        cropBlueberry: './images/cropBlueberry.png',
+        cropCorn: './images/cropCorn.png',
+        cropMelon: './images/cropMelon.png',
+        cropPumpkin: './images/cropPumpkin.png',
+        cropStrawberry: './images/cropStrawberry.png',
+        hoe: './images/hoe.png',
+        milkPail: './images/milkpail.png',
+        wateringCan: './images/wateringcan.png',
+        trash: './images/trash.png'
+    }
+
+    loadImages(sources, function(images) { // finishes sources then callback?
+        console.log('hi!');
+        start(images);
     })
 }
 
-function goBackDirectory(app) {
+function deleteFileFolder(group, crop, layer) {
 
-    
+    // group.on('click', function(evt) {
+    //     console.log('asdfsdfa');
+    // });
+
+    crop.on('click', function(evt) {
+
+        // push to array to delete
+        if (evt.target.opacity() == 1) {
+            this.opacity(0.5);
+        // remove from array to deselect from deletion
+        } else if (evt.target.opacity() == 0.5) {
+            this.opacity(1);
+        }
+        console.log('image name: ', evt.target);
+
+        layer.draw();
+    })
+
+
+    // // delete file/folder
+    // document.addEventListener('dblclick', function (event) {
+
+    //     // stores selected target to remove
+    //     let fileDelete = "./";
+    //     fileDelete += event.target.innerHTML;
+    //     console.log(fileDelete);
+
+    //     // if double clicked on delete file and delete child
+    //     if (event.target.classList.contains('currFile')) {
+    //         // remove clicked text from UI
+    //         document.getElementById("currUL").removeChild(event.target);
+    //         // it is a file
+    //         // remove actual file
+    //         fs.unlink(fileDelete, (err) => {
+    //             if (err) {
+    //                 console.error(err)
+    //                 return
+    //             }
+    //             // file was removed
+    //         })     
+    //     }
+    //     else if (event.target.classList.contains('currFolder')) {
+    //         // remove clicked text from UI
+    //         document.getElementById("currUL").removeChild(event.target);
+
+    //         // if directory use remove to delete directory
+    //         fs.remove(fileDelete, (err) => {
+    //             if (err) {
+    //                 console.log("could not delete directory: " + err) 
+    //                 return
+    //             }
+    //         })  
+    //     }
+    // })
+}
+
+function goBackDirectory() {
     // go up a directory
     console.log('back');
     let button = document.querySelector("#goUP");
     button.addEventListener('click', function (event) {
-        
-        let b = app.stage.children.length - 1;
-        while(b >= 0) {
-            app.stage.removeChild(app.stage.children[b]);
-            b--;
-        }
-
         // go up a directory
         process.chdir("../")
         console.log(process.cwd());
+        console.log('random');
         newPath = process.cwd();
 
-        printContents(app);
+        printContents();
         // printContents(path.join(__dirname))
     })
 }
 
-function goIntoDirectory(app) {
-    // // go into a directory
-    // document.addEventListener('click', function (event) {
-    //     // if double clicked on delete file and delete child
-    //     if (event.target) {
-    //         // stores selected target to remove
-    //         let folderIn = "./";
-    //         folderIn += event.target.id();
-    //         console.log(folderIn);
-            
-    //         // change to new directory
-    //         process.chdir(folderIn);
-    //         newPath = process.cwd();
+function goIntoDirectory(group, stage) {
 
-    //         printContents();
-            
-    //     }
-    //     // if file do nothing
-    // })
+    group.on('dblclick', function(evt) {
+        var group = evt.target;
+        console.log('You double clicked on ', group.name());
+
+        let folderIn = "./";
+
+        let substring = group.name().substr(group.name().indexOf(' ') + 1);
+        folderIn += substring;
+        console.log(folderIn);
+        
+        // change to new directory
+        process.chdir(folderIn);
+        newPath = process.cwd();
+
+
+        stage.destroy();
+        printContents();
+    })
 }
-function createFileFolder(app) {
+function createFileFolder() {
     ipcRenderer.on('file:add', function(e, file) {
         const p = document.createElement('p');
         const itemText = document.createTextNode(file);
