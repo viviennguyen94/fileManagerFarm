@@ -6,13 +6,21 @@ This program is a file manager with a unique GUI that allows users to delete, cr
 - Files: crops (fruits / vegetables)  
 - Folders: cows (because when you double click on them, old crops disappear and new ones appear (simulating cows eating crops and their manure helping to create new ones) 
 - Current Path: displayed on top 
-Functionality Overview 
+
+### Functionality Overview 
  
 The following functionalities are represented by the buttons below: 
-- Trash (multiple): deleting files / folders  - Move (1): moving files  - Crop Info (1): viewing file information  
-- Copy (1): copying files from current directory to any other one - Grow Crop (1):  create file / folder  
+- Trash (multiple): deleting files / folders  
+- Move (1): moving files  
+- Crop Info (1): viewing file information  
+- Copy (1): copying files from current directory to any other one 
+- Grow Crop (1):  create file / folder  
+
 Other functionalities: 
-- Going into a directory (double clicking) o Re-renders the page and shows all files / folders in the double clicked directory -  Back Button (located on bottom left): go back up a directory 
+
+- Going into a directory (double clicking) 
+      o Re-renders the page and shows all files / folders in the double clicked directory 
+- Back Button (located on bottom left): go back up a directory 
  
 ### Functionalities in Detail
  
