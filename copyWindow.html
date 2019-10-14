@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Create folder / file</title>
+    <title>Create folder</title>
 </head>
 <body>
     <form>
         <div>
-            <label>Enter folder or file name</label>
-            <input type="text" id="fileCreate" autofocus>
+            <label>Enter folder path to copy file(s) to</label>
+            <input type="text" id="fileCopy" autofocus>
         </div>
-        <button type="submit">Create</button>
+        <button type="submit">Copy</button>
     </form>
     <script>
         const electron = require('electron');
@@ -20,8 +20,8 @@
 
         function submitForm(e) {
             e.preventDefault();
-            const file = document.querySelector("#fileCreate").value;
-            ipcRenderer.send('file:add', file)
+            const filePath = document.querySelector("#fileCopy").value;
+            ipcRenderer.send('file:copy', filePath)
         }
     </script>
 </body>

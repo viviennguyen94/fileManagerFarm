@@ -35,8 +35,8 @@ app.on('ready', function() {
 function createWindow() {
     //create new window
     addWindow = new BrowserWindow({
-        width: 200,
-        height: 300,
+        width: 300,
+        height: 200,
         title: 'Create new file / folder'
     });
     // load html window
@@ -58,6 +58,99 @@ ipcMain.on('file:add', function(err, file) {
     addWindow.close();
 })
 
+// watering can button
+ipcMain.on('createPopUp', function(err) {
+    createWindow();
+})
+
+// Handle copy window
+function copyWindow() {
+    //create new window
+    addWindow = new BrowserWindow({
+        width: 300,
+        height: 200,
+        title: 'Folder path to copy files to'
+    });
+    // load html window
+    addWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'copyWindow.html'),
+        protocol: 'file:',
+        slashes: true
+    }));  // file://dirname/mainWindow.html
+
+    // garbage collection handle
+    addWindow.on('close', function() {
+        addWindow = null;
+    })
+}
+
+ipcMain.on('copyPopUp', function(err) {
+    copyWindow();
+})
+
+ipcMain.on('file:copy', function(err, filePath) {
+    mainWindow.webContents.send('file:copy', filePath);
+    addWindow.close();
+})
+
+// Handle move window
+function moveWindow() {
+    //create new window
+    addWindow = new BrowserWindow({
+        width: 300,
+        height: 200,
+        title: 'Folder path to move files to'
+    });
+    // load html window
+    addWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'moveWindow.html'),
+        protocol: 'file:',
+        slashes: true
+    }));  // file://dirname/mainWindow.html
+
+    // garbage collection handle
+    addWindow.on('close', function() {
+        addWindow = null;
+    })
+}
+
+ipcMain.on('movePopUp', function(err) {
+    moveWindow();
+})
+
+ipcMain.on('file:move', function(err, filePath) {
+    mainWindow.webContents.send('file:move', filePath);
+    addWindow.close();
+})
+
+
+// // Handle move window
+// function fileWindow() {
+//     //create new window
+//     addWindow = new BrowserWindow({
+//         width: 300,
+//         height: 200,
+//         title: 'File Information'
+//     });
+//     // load html window
+//     addWindow.loadURL(url.format({
+//         pathname: path.join(__dirname, 'fileWindow.html'),
+//         protocol: 'file:',
+//         slashes: true
+//     }));  // file://dirname/mainWindow.html
+
+//     // garbage collection handle
+//     addWindow.on('close', function() {
+//         addWindow = null;
+//     })
+// }
+// ipcMain.on('fileInfoPopUp', function(err) {
+//     fileWindow();
+// })
+// ipcMain.on('file:info', function(e, JSONfileInfo) {
+//     addWindow.webContents.send('file:info', JSONfileInfo);
+// })
+
 // create menu template
 const mainMenuTemplate = [
     {
@@ -68,12 +161,6 @@ const mainMenuTemplate = [
                 click() {
                     createWindow();
                 }
-            },
-            {
-                label: 'Delete file/folder'
-            },
-            {
-                label: 'Copy file/copy folder'
             },
             {
                 label: 'Quit',
