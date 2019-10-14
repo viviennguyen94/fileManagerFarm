@@ -13,6 +13,7 @@ This program is a file manager with a unique GUI that allows users to delete, cr
  
 The following functionalities are represented by the buttons below: 
 - Trash (multiple): deleting files / folders  
+![trash](gifs/clip2.gif)
 - Move (single): moving files  
 - Crop Info (single): viewing file information  
 - Copy (single): copying files from current directory to any other one 
@@ -40,6 +41,10 @@ Click on the ‘Grow Crop’ button
 - A separate prompt window should pop up and prompt for file or folder name. If there is a ‘.’ submitted text, the program sees this as a file creation. If there is not, it is a folder creation.  
 - Cows are made for folders and crops are for files. Page re-renders. 
 
+![create file name](gifs/clip5.gif)
+
+![create file](gifs/clip4.gif)
+
 **Copy files**  
 
 Select one file to copy and then select the ‘Copy’ button  
@@ -55,6 +60,7 @@ Same as copying files, except the file you selected is deleted from the current 
 Select a file and then click ‘Crop Info’ 
 - File information is displayed on the right side of the program.
 - Gets re-rendered every time you select a new file and ‘Crop Info’ 
+![file info](gifs/clip3.gif)
 
 ## Installation
 
