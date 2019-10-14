@@ -1,7 +1,9 @@
 ## Introduction
 ### Farm Theme File Manager
 
-This program is a file manager with a unique GUI that allows users to delete, create, move, and view information of files. The theme of this program is a farming theme. The files and folders are represented by the following:  
+This program is a file manager with a unique GUI that allows users to delete, create, move, and view information of files. The theme of this program is farming. The files and folders are represented by the following:  
+
+![intro](gifs/clip1.gif)
 
 - Files: crops (fruits / vegetables)  
 - Folders: cows (because when you double click on them, old crops disappear and new ones appear (simulating cows eating crops and their manure helping to create new ones) 
