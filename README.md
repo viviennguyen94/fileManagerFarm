@@ -20,11 +20,13 @@ You can select multiple files and directories.
 - Every time a file or folder is selected, it gets pushed onto a global array (by group name) 
  - Indicated by lower opacity of the image and text turns green 
  - Once you decide these are the files / folders you want to delete, you click on the trash button. The on click function loops through the global array to locate these groups and delete from the interface. It determines if they are a file or folder and deletes them accordingly. 
- - Page re-renders. 
+ - Page re-renders.
+
 **Create files / folders**
 - Click on the ‘Grow Crop’ button 
  - A separate prompt window should pop up and prompt for file or folder name. If there is a ‘.’ submitted text, the program sees this as a file creation. If there is not, it is a folder creation.  
  - Cows are made for folders and crops are for files. Page re-renders. 
+
 **Copy files**  
 - Select one file to copy and then select the ‘Copy’ button  
  - Even though you can select multiple files, the last file that gets clicked is chosen to get copied.  
