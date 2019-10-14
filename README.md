@@ -2,6 +2,7 @@
 ### Farm Theme File Manager
 
 This program is a file manager with a unique GUI that allows users to delete, create, move, and view information of files. The theme of this program is a farming theme. The files and folders are represented by the following:  
+
 - Files: crops (fruits / vegetables)  
 - Folders: cows (because when you double click on them, old crops disappear and new ones appear (simulating cows eating crops and their manure helping to create new ones) 
 - Current Path: displayed on top 
@@ -24,16 +25,19 @@ You can select multiple files and directories.
 - Page re-renders.
 
 **Create files / folders**
+
 Click on the ‘Grow Crop’ button 
 - A separate prompt window should pop up and prompt for file or folder name. If there is a ‘.’ submitted text, the program sees this as a file creation. If there is not, it is a folder creation.  
 - Cows are made for folders and crops are for files. Page re-renders. 
 
 **Copy files**  
+
 Select one file to copy and then select the ‘Copy’ button  
 - Even though you can select multiple files, the last file that gets clicked is chosen to get copied.  
 - A prompt should pop up asking for a full path of a different directory you want to copy to. 
  
 **Move files**
+
 Same as copying files, except the file you selected is deleted from the current directory. 
  
 **Viewing file information** 
