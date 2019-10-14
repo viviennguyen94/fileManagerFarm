@@ -11,10 +11,10 @@ This program is a file manager with a unique GUI that allows users to delete, cr
  
 The following functionalities are represented by the buttons below: 
 - Trash (multiple): deleting files / folders  
-- Move (1): moving files  
-- Crop Info (1): viewing file information  
-- Copy (1): copying files from current directory to any other one 
-- Grow Crop (1):  create file / folder  
+- Move (single): moving files  
+- Crop Info (single): viewing file information  
+- Copy (single): copying files from current directory to any other one 
+- Grow Crop (single):  create file / folder  
 
 Other functionalities: 
 
