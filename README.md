@@ -19,7 +19,7 @@ The following functionalities are represented by the buttons below:
 Other functionalities: 
 
 - Going into a directory (double clicking) 
-      o Re-renders the page and shows all files / folders in the double clicked directory 
+    - Re-renders the page and shows all files / folders in the double clicked directory 
 - Back Button (located on bottom left): go back up a directory 
  
 ### Functionalities in Detail
@@ -28,7 +28,7 @@ Other functionalities:
 
 You can select multiple files and directories. 
 - Every time a file or folder is selected, it gets pushed onto a global array (by group name) 
-- Indicated by lower opacity of the image and text turns green 
+    - Indicated by lower opacity of the image and text turns green 
 - Once you decide these are the files / folders you want to delete, you click on the trash button. The on click function loops through the global array to locate these groups and delete from the interface. It determines if they are a file or folder and deletes them accordingly. 
 - Page re-renders.
 
