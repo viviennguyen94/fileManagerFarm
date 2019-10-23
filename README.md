@@ -69,3 +69,7 @@ Select a file and then click ‘Crop Info’
 ## Run Program
 
 `npm start`
+
+## Resources
+- React 
+
