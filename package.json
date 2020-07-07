@@ -9,7 +9,7 @@
   "author": "vivien nguyen",
   "license": "MIT",
   "dependencies": {
-    "electron": "^4.0.5",
+    "electron": "^7.2.4",
     "nodemon": "^1.18.11"
   },
   "devDependencies": {
